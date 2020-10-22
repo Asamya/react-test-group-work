@@ -1,4 +1,5 @@
 import React from "react";
+import userEvent from "@testing-library/user-event";
 import {render} from "@testing-library/react";
 import Todo from "../components/Todo";
 
@@ -59,9 +60,21 @@ test('render status open', () => {
 })
 
 
-test('button is only shown in Open', () => {
+test('button is shown in Open', () => {
     //Given
     const givenStatus = 'OPEN';
+    const {getByRole} = render(<Todo status={givenStatus}/>);
+
+    //When
+    const actual = getByRole('button', {name:/Advance/});
+
+    //Then
+    expect(actual).toBeVisible();
+})
+
+test('button is shown in In_Progress', () => {
+    //Given
+    const givenStatus = 'IN_PROGRESS';
     const {getByRole} = render(<Todo status={givenStatus}/>);
 
     //When
@@ -82,5 +95,37 @@ test('button is not shown in done', () => {
     //Then
     expect(actual).not.toBeInTheDocument();
 })
+
+test('no button to see when showbutton is false', () => {
+    //Given
+    const statusShowButtons = false;
+    const {queryAllByRole} = render(<Todo showButtons={statusShowButtons}/>);
+
+    //When
+    const actual = queryAllByRole('button');
+
+    //Then
+    expect(actual).toHaveLength(0);
+})
+
+it('data is calles by click on advance', () => {
+    //Given
+    //const todoData = {id: 'asldfjlsdj', description: 'Hallo', status:'IN_PROGRESS'}
+    const handlerOnClick = jest.fn();
+    const {getByRole} = render(<Todo onAdvance={handlerOnClick}
+                                      id={'asldfjlsdj'}
+                                      description={'Hallo'}
+                                      status={'IN_PROGRESS'}
+    />);
+
+    //When
+    const button = getByRole('button',{name:'Advance'});
+    userEvent.click(button);
+
+    //Then
+    expect(handlerOnClick).toHaveBeenCalledWith({'id':'asldfjlsdj', 'description':'Hallo', 'status':'IN_PROGRESS'});
+})
+
+
 
 
