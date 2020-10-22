@@ -71,17 +71,16 @@ test('button is only shown in Open', () => {
     expect(actual).toBeVisible();
 })
 
-/*test('button is not shown in done', () => {
+test('button is not shown in done', () => {
     //Given
     const givenStatus = 'DONE';
-    const {getByRole} = render(<Todo status={givenStatus}/>);
+    const {queryByRole} = render(<Todo status={givenStatus}/>);
 
     //When
-    const actual = getByRole('button', {name:/Advance/i});
+    const actual = queryByRole('button', {name:/Advance/i});
 
     //Then
-    !expect(actual).toBeVisible();
+    expect(actual).not.toBeInTheDocument();
 })
 
- */
 
